@@ -46,6 +46,15 @@ async function run() {
 
 
 
+        //  *************** contactCollection ***************
+        app.get("/contacts", async (req, res) => {
+            const result = await contactCollection.find().toArray();
+            res.send(result);
+        })
+
+
+
+        
 
 
         
