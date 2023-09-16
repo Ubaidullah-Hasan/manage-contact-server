@@ -34,7 +34,6 @@ async function run() {
 
         const contactCollection = client.db("contactManage").collection("contacts");
         const userCollection = client.db("contactManage").collection("users");
-        const shareCollection = client.db("contactManage").collection("shares");
 
 
 
@@ -52,7 +51,7 @@ async function run() {
             res.send(result);
         })
 
-        
+
         app.get("/contacts/search", async (req, res) => {
             try {
                 const { query } = req.query;
@@ -74,10 +73,27 @@ async function run() {
             }
         });
 
-        
+
+        // delete multiple contacts
+        app.post("/deleteMultipleContacts", async (req, res) => {
+            const { contactIds } = req.body;
+            console.log(contactIds);
+
+            const objectIdsToDelete = contactIds.map(id => new ObjectId(id));
+            try {
+                const query = { _id: { $in: objectIdsToDelete } };
+                const result = await contactCollection.deleteMany(query);
+                res.send(result);
+            } catch (err) {
+                console.error(err);
+                res.status(500).json({ error: 'Error deleting contacts' });
+            }
+        })
 
 
-        
+
+
+
 
 
 
