@@ -52,7 +52,27 @@ async function run() {
             res.send(result);
         })
 
+        
+        app.get("/contacts/search", async (req, res) => {
+            try {
+                const { query } = req.query;
+                // console.log(query);
 
+                if (query) {
+                    const searchResult = await contactCollection.find({
+                        name: { $regex: new RegExp(query, 'i') } // 'i' makes it case-insensitive
+                    }).toArray();
+                    res.send(searchResult);
+                } else {
+                    const searchResult = await contactCollection.find().toArray();
+                    res.send(searchResult);
+                }
+
+            } catch (error) {
+                console.error('Error searching contacts:', error);
+                res.status(500).send({ error: 'Internal server error' });
+            }
+        });
 
         
 
