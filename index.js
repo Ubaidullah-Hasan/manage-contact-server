@@ -75,6 +75,15 @@ async function run() {
             res.send(result);
         });
 
+        app.get("/users/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const options = {
+                projection: { password: 0, memberAt: 0, },
+            }
+            const result = await userCollection.findOne(query, options);
+            res.send(result);
+        })
 
 
 
