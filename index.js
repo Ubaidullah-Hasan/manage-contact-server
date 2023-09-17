@@ -225,6 +225,23 @@ async function run() {
         });
 
 
+        // sort contacts by category
+        app.get("/contacts/category/:categoryName", async (req, res) => {
+            const { categoryName } = req.params;
+            try {
+                if (categoryName === "all") {
+                    const result = await contactCollection.find({}).toArray();
+                    return res.send(result);
+                }
+                const result = await contactCollection.find({ category: categoryName }).toArray();
+                res.send(result);
+            } catch (error) {
+                console.error("Error fetching contacts by category:", error);
+                res.status(500).send("Error fetching contacts by category");
+            }
+        });
+
+
 
 
 
