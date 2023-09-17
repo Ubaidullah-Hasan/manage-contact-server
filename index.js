@@ -187,6 +187,43 @@ async function run() {
         });
 
 
+        // post contact
+        app.post("/contacts", async (req, res) => {
+            const userInfo = req.body;
+            // console.log(userInfo)
+
+            try {
+                const data = {
+                    name: userInfo?.name,
+                    email: userInfo?.email,
+                    phone: userInfo?.phone,
+                    image: userInfo?.image,
+                    category: userInfo?.category,
+                    timeAt: userInfo?.timeAt,
+                }
+                const result = await contactCollection.insertOne(data);
+                res.send(result);
+            } catch (err) {
+                console.error("Error posting contact:", err);
+                res.status(500).send("Error posting contact");
+            }
+        })
+
+
+        // contact categories load
+        app.get("/contacts/categories", async (req, res) => {
+            try {
+                const options = {
+                    projection: { category: 1 }
+                };
+                const result = await contactCollection.find({}, options).toArray();
+                res.send(result);
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+                res.status(500).send("Error fetching categories");
+            }
+        });
+
 
 
 
