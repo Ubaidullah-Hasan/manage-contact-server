@@ -242,6 +242,18 @@ async function run() {
         });
 
 
+        
+
+        //  *************** TOTAL COUNTS ***************
+        app.get("/count", async (req, res) => {
+            const totalContacts = (await contactCollection.countDocuments());
+            const totalUsers = (await userCollection.countDocuments());
+            res.json({
+                totalContacts,
+                totalUsers
+            });
+        });
+
 
 
 
