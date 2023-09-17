@@ -38,7 +38,42 @@ async function run() {
 
 
         //  *************** userCollection ***************
+        app.post("/users", async (req, res) => {
+            const body = req.body;
+            // console.log(body);
 
+            // chcek user exist
+            const query = { email: body.email };
+            const existingUser = await userCollection.findOne(query);
+
+            if (existingUser) {
+                return res.send({ message: "user already exist!" });
+            }
+
+            const options = {
+                weekday: 'short',   // Example: "Fri"
+                year: 'numeric',    // Example: "2023"
+                month: 'long',     // Example: "August"
+                day: 'numeric',     // Example: "25"
+                hour: '2-digit',    // Example: "08"
+                minute: '2-digit',  // Example: "27"
+                second: '2-digit',  // Example: "45"
+                timeZoneName: 'short'  // Example: "GMT+6"
+            };
+
+            const formattedDate = new Date().toLocaleString(undefined, options);
+
+            const userInfo = {
+                userName: body.userName,
+                password: body.password,
+                email: body.email,
+                memberAt: formattedDate,
+                userRole: body.role,
+            };
+
+            const result = await userCollection.insertOne(userInfo);
+            res.send(result);
+        });
 
 
 
@@ -77,7 +112,7 @@ async function run() {
         // delete multiple contacts
         app.post("/deleteMultipleContacts", async (req, res) => {
             const { contactIds } = req.body;
-            console.log(contactIds);
+            // console.log(contactIds);
 
             const objectIdsToDelete = contactIds.map(id => new ObjectId(id));
             try {
