@@ -153,12 +153,38 @@ async function run() {
         })
 
 
+        // delete single contacts by id
         app.delete("/contacts/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await contactCollection.deleteOne(query);
             res.send(result);
         })
+
+
+        // update single contacts by id
+        app.put("/contacts/:id", async (req, res) => {
+            const id = req.params.id;
+            const body = req.body;
+
+            try {
+                const filter = { _id: new ObjectId(id) };
+                const update = {
+                    $set: {
+                        name: body.name,
+                        email: body.email,
+                        phone: body.phone,
+                        category: body.category,
+                    }
+                };
+
+                const result = await contactCollection.updateOne(filter, update);
+                res.send(result);
+            } catch (error) {
+                console.error("Error updating contact:", error);
+                res.status(500).send("Error updating contact");
+            }
+        });
 
 
 
